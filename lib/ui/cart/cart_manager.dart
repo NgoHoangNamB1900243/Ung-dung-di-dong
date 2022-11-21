@@ -1,16 +1,21 @@
-import '../../models/cart_item.dart';
+import 'package:flutter/widgets.dart';
+import 'package:myshop/models/product.dart';
+import 'package:flutter/foundation.dart';
 
-class CartManager {
-  final Map<String, CartItem> _items = {
+import '../../models/cart_item.dart';
+import '../../models/product.dart';
+
+class CartManager with ChangeNotifier {
+  Map<String, CartItem> _items = {
     'p1': CartItem(
       id: 'c1',
-      title: 'Nike_Air_Jordan_1_Retro_High_Og',
-      price: 160,
+      title: 'Red Shirt',
       quantity: 2,
+      price: 29.99,
     ),
   };
 
-  int get ProductCount {
+  int get productCount {
     return _items.length;
   }
 
@@ -18,7 +23,7 @@ class CartManager {
     return _items.values.toList();
   }
 
-  Iterable<MapEntry<String, CartItem>> get ProductEntries {
+  Iterable<MapEntry<String, CartItem>> get productEntries {
     return {..._items}.entries;
   }
 
@@ -28,5 +33,55 @@ class CartManager {
       total += cartItem.price * cartItem.quantity;
     });
     return total;
+  }
+
+  void addItem(Product product) {
+    if (_items.containsKey(product.id)) {
+      // change quantity...
+      _items.update(
+        product.id!,
+        (existingCartItem) => existingCartItem.copyWith(
+          quantity: existingCartItem.quantity + 1,
+        ),
+      );
+    } else {
+      _items.putIfAbsent(
+        product.id!,
+        () => CartItem(
+          id: 'c${DateTime.now().toIso8601String()}',
+          title: product.title,
+          price: product.price,
+          quantity: 1,
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]?.quantity as num > 1) {
+      _items.update(
+        productId,
+        (existingCartItem) => existingCartItem.copyWith(
+          quantity: existingCartItem.quantity - 1,
+        ),
+      );
+    } else {
+      _items.remove(productId);
+    }
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = {};
+    notifyListeners();
   }
 }

@@ -7,14 +7,9 @@ class OrdersManager with ChangeNotifier {
   final List<OrderItem> _orders = [
     OrderItem(
       id: 'o1',
-      amount: 320.0,
+      amount: 59.98,
       products: [
-        CartItem(
-          id: 'c1',
-          title: 'Nike_Air_Jordan_1_Retro_High_Og',
-          price: 160,
-          quantity: 2,
-        )
+        CartItem(id: 'c1', title: 'Red Shirt', quantity: 2, price: 29.99)
       ],
       dateTime: DateTime.now(),
     )
@@ -24,7 +19,20 @@ class OrdersManager with ChangeNotifier {
     return _orders.length;
   }
 
-  List<OrderItem> get orders {
+  List<OrderItem> get order {
     return [..._orders];
+  }
+
+  void addOrder(List<CartItem> cartProducts, double total) async {
+    _orders.insert(
+      0,
+      OrderItem(
+        id: 'o${DateTime.now().toIso8601String()}',
+        amount: total,
+        products: cartProducts,
+        dateTime: DateTime.now(),
+      ),
+    );
+    notifyListeners();
   }
 }
