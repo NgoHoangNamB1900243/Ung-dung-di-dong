@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import '../../models/product.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  static const routeName = '/product-detail';
-  const ProductDetailScreen(this.product, {super.key});
+  static const routeName = 'product-detail';
+
+  const ProductDetailScreen(
+    this.product, {
+    super.key,
+  });
+
   final Product product;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +32,11 @@ class ProductDetailScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              '\$${product.price}',
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 20,
-              ),
-            ),
+            Text('\$${product.price}',
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20,
+                )),
             const SizedBox(
               height: 10,
             ),
@@ -44,7 +48,7 @@ class ProductDetailScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
-            )
+            ),
           ],
         ),
       ),

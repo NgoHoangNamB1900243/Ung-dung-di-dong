@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../orders/order_manager.dart';
 import 'cart_manager.dart';
 import 'cart_item_card.dart';
 
@@ -12,7 +10,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cart = context.watch<CartManager>();
+    final cart = CartManager();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Cart'),
@@ -31,14 +29,12 @@ class CartScreen extends StatelessWidget {
 
   Widget buildCartDetails(CartManager cart) {
     return ListView(
-      children: cart.productEntries
-          .map(
-            (entry) => CartItemCard(
-              productId: entry.key,
-              cardItem: entry.value,
-            ),
-          )
-          .toList(),
+      children: cart.ProductEntries.map(
+        (entry) => CartItemCard(
+          productId: entry.key,
+          cardItem: entry.value,
+        ),
+      ).toList(),
     );
   }
 
@@ -59,21 +55,15 @@ class CartScreen extends StatelessWidget {
               label: Text(
                 '\$${cart.totalAmount.toStringAsFixed(2)}',
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).primaryTextTheme.headline6?.color,
                 ),
               ),
               backgroundColor: Theme.of(context).primaryColor,
             ),
             TextButton(
-              onPressed: cart.totalAmount <= 0
-                  ? null
-                  : () {
-                      context.read<OrdersManager>().addOrder(
-                            cart.products,
-                            cart.totalAmount,
-                          );
-                      cart.clear();
-                    },
+              onPressed: () {
+                print('An order has been added');
+              },
               style: TextButton.styleFrom(
                 textStyle: TextStyle(color: Theme.of(context).primaryColor),
               ),
